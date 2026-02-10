@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 @Service
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
         //TODO:
         //assign the default role
+        if (user.getRoles() == null) {
+            user.setRoles(new HashSet<>());
+        }
 
         Role role = roleRepository.findByName("ROLE_" + AppConstants.GUEST_ROLE).orElse(null);
         user.getRoles().add(role);
