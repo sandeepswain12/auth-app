@@ -21,3 +21,14 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:Q2hhdEdQVF9TdXBlcl9TZWN1cmVfSldUX0tleV9Gb3JfSFMyNTZfSFM1MTJfMjAyNl9Qcm9kdWN0aW9uX1JlYWR5X0tleQ==}
+    issuer: ${JWT_ISSUER:com.dev.auth}
+    access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:3600}
+    refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:86400}
+    refresh-token-cookie-name: ${JWT_REFRESH_TOKEN_COOKIE_NAME:refreshToken}
+    cookie-secure: ${JWT_COOKIE_SECURE:true}
+    cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}

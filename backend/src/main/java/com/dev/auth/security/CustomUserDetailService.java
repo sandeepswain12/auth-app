@@ -1,4 +1,4 @@
-package com.dev.auth.service.impl;
+package com.dev.auth.security;
 
 import com.dev.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
