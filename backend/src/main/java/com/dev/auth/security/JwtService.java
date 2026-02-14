@@ -73,7 +73,7 @@ public class JwtService {
                 .issuer(issuer)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusSeconds(refreshTtlSeconds)))
-                .claim("typ", "regresh")
+                .claim("typ", "refresh")
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
