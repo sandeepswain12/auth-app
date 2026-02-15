@@ -4,6 +4,7 @@ package com.dev.auth.config;
 import com.dev.auth.dtos.ApiError;
 import com.dev.auth.security.JwtAuthenticationFilter;
 
+import com.dev.auth.security.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +42,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private AuthenticationSuccessHandler successHandler;
+    private final OAuth2SuccessHandler successHandler;
 
 //.cors(Customizer.withDefaults()).sessionManagement(sm -> sm.
 //            sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -57,6 +58,11 @@ public class SecurityConfig {
 //                                .requestMatchers(AppConstants.AUTH_ADMIN_URLS).hasRole(AppConstants.ADMIN_ROLE)
 //                                .requestMatchers(AppConstants.AUTH_GUEST_URLS).hasRole(AppConstants.GUEST_ROLE)
                                 .anyRequest().authenticated())
+                .oauth2Login(oauth ->
+                        oauth.successHandler(successHandler)
+                                .failureHandler(null)
+                )
+                .logout(AbstractHttpConfigurer::disable)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, e) -> {
                     //error message
                     e.printStackTrace();
