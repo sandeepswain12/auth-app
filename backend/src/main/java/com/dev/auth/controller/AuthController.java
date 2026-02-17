@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,8 @@ import java.util.UUID;
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
 public class AuthController {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -107,7 +111,9 @@ public class AuthController {
         //Thread.sleep(5000);
 
         String refreshToken = readRefreshTokenFromRequest(body, request).orElseThrow(() -> new BadCredentialsException("Refresh token is missing"));
-
+        log.info("Incoming refresh token: {}", refreshToken);
+        UUID decodedUserId = jwtService.getUserId(refreshToken);
+        log.info("Decoded userId from token: {}", decodedUserId);
 
         if(!jwtService.isRefreshToken(refreshToken)){
             throw new BadCredentialsException("Invalid Refresh Token Type");
@@ -117,6 +123,10 @@ public class AuthController {
         UUID userId = jwtService.getUserId(refreshToken);
         RefreshToken storedRefreshToken = refreshTokenRepository.findByJti(jti).orElseThrow(() -> new BadCredentialsException("Refresh token not recognized"));
 
+        log.info("Stored token belongs to user email: {}",
+                storedRefreshToken.getUser().getEmail());
+        log.info("Stored token belongs to user id: {}",
+                storedRefreshToken.getUser().getId());
         if(storedRefreshToken.isRevoked()){
             throw new BadCredentialsException("Refresh token expired or revoked");
         }
